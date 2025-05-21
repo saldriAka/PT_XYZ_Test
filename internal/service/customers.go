@@ -28,10 +28,12 @@ func NewCustomers(
 	}
 }
 
-func (s customersService) Index(ctx context.Context) ([]dto.CustomersData, error) {
-	result, err := s.customersRepository.FindAll(ctx)
+func (s customersService) Index(ctx context.Context, page, limit int) ([]dto.CustomersData, int64, error) {
+	offset := (page - 1) * limit
+
+	result, total, err := s.customersRepository.FindAll(ctx, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var data []dto.CustomersData
@@ -56,7 +58,7 @@ func (s customersService) Index(ctx context.Context) ([]dto.CustomersData, error
 		})
 	}
 
-	return data, nil
+	return data, total, nil
 }
 
 func (s customersService) Show(ctx context.Context, id string) (dto.CustomersShowData, error) {
@@ -100,15 +102,13 @@ func (s customersService) Create(ctx context.Context, req dto.CreateCustomersReq
 	}
 
 	customer := domain.Customers{
-		ID:             uuid.NewString(),
-		NIK:            req.NIK,
-		FullName:       req.FullName,
-		LegalName:      req.LegalName,
-		PlaceOfBirth:   req.PlaceOfBirth,
-		DateOfBirth:    sql.NullTime{Valid: true, Time: dob},
-		Salary:         req.Salary,
-		KTPPhotoURL:    req.KTPPhotoURL,
-		SelfiePhotoURL: req.SelfiePhotoURL,
+		ID:           uuid.NewString(),
+		NIK:          req.NIK,
+		FullName:     req.FullName,
+		LegalName:    req.LegalName,
+		PlaceOfBirth: req.PlaceOfBirth,
+		DateOfBirth:  sql.NullTime{Valid: true, Time: dob},
+		Salary:       req.Salary,
 		CreatedAt: sql.NullTime{
 			Valid: true,
 			Time:  time.Now(),
@@ -137,14 +137,21 @@ func (s customersService) Update(ctx context.Context, req dto.UpdateCustomersReq
 	customer.PlaceOfBirth = req.PlaceOfBirth
 	customer.DateOfBirth = sql.NullTime{Valid: true, Time: dob}
 	customer.Salary = req.Salary
-	customer.KTPPhotoURL = req.KTPPhotoURL
-	customer.SelfiePhotoURL = req.SelfiePhotoURL
 	customer.UpdatedAt = sql.NullTime{
 		Valid: true,
 		Time:  time.Now(),
 	}
 
 	return s.customersRepository.Update(ctx, &customer)
+}
+
+func (s customersService) UpdateAssets(ctx context.Context, id string, req dto.UpdateAssetsCustomersRequest) error {
+	customer := &domain.Customers{
+		ID:             id,
+		KTPPhotoURL:    req.KTPPhotoURL,
+		SelfiePhotoURL: req.SelfiePhotoURL,
+	}
+	return s.customersRepository.UpdateAssets(ctx, customer)
 }
 
 func (s customersService) Delete(ctx context.Context, id string) error {

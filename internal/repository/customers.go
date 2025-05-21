@@ -19,12 +19,25 @@ func NewCustomers(db *gorm.DB) domain.CustomersRepository {
 	}
 }
 
-func (r *customersRepository) FindAll(ctx context.Context) ([]domain.Customers, error) {
+func (r *customersRepository) FindAll(ctx context.Context, limit, offset int) ([]domain.Customers, int64, error) {
 	var customers []domain.Customers
+	var total int64
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Customers{}).
+		Where("deleted_at IS NULL").
+		Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
 	err := r.db.WithContext(ctx).
 		Where("deleted_at IS NULL").
+		Order("created_at DESC").
+		Limit(limit).
+		Offset(offset).
 		Find(&customers).Error
-	return customers, err
+
+	return customers, total, err
 }
 
 func (r *customersRepository) FindById(ctx context.Context, id string) (domain.Customers, error) {
@@ -60,6 +73,16 @@ func (r *customersRepository) Update(ctx context.Context, customer *domain.Custo
 		Model(&domain.Customers{}).
 		Where("id = ? AND deleted_at IS NULL", customer.ID).
 		Updates(customer).Error
+}
+
+func (r *customersRepository) UpdateAssets(ctx context.Context, customer *domain.Customers) error {
+	return r.db.WithContext(ctx).
+		Model(&domain.Customers{}).
+		Where("id = ? AND deleted_at IS NULL", customer.ID).
+		Updates(map[string]interface{}{
+			"ktp_photo_url":    customer.KTPPhotoURL,
+			"selfie_photo_url": customer.SelfiePhotoURL,
+		}).Error
 }
 
 func (r *customersRepository) Delete(ctx context.Context, id string) error {

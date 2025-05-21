@@ -11,24 +11,24 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type limitController struct {
-	limitService domain.LimitService
+type transactionsController struct {
+	transactionsService domain.TransactionsService
 }
 
-func NewLimit(app *fiber.App, limitService domain.LimitService) {
-	lmt := &limitController{
-		limitService: limitService,
+func NewTransactions(app *fiber.App, transactionsService domain.TransactionsService) {
+	tc := &transactionsController{
+		transactionsService: transactionsService,
 	}
 
-	limit := app.Group("/limit")
-	limit.Get("/", lmt.Index)
-	limit.Get("/:id", lmt.Show)
-	limit.Post("/", lmt.Create)
-	limit.Put("/:id", lmt.Update)
-	limit.Delete("/:id", lmt.Delete)
+	transactions := app.Group("/transactions")
+	transactions.Get("/", tc.Index)
+	transactions.Post("/", tc.Create)
+	transactions.Get("/:id", tc.Show)
+	transactions.Put("/:id", tc.Update)
+	transactions.Delete("/:id", tc.Delete)
 }
 
-func (lmt *limitController) Index(ctx *fiber.Ctx) error {
+func (tc transactionsController) Index(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -37,7 +37,8 @@ func (lmt *limitController) Index(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).
 			JSON(dto.CreateResponseErrorData("validasi query gagal", fails))
 	}
-	res, total, err := lmt.limitService.Index(c, page, limit)
+
+	res, total, err := tc.transactionsService.Index(c, page, limit)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).
 			JSON(dto.CreateResponseError(err.Error()))
@@ -46,12 +47,37 @@ func (lmt *limitController) Index(ctx *fiber.Ctx) error {
 	return dto.PaginateAndRespond(ctx, res, int(total))
 }
 
-func (lmt *limitController) Show(ctx *fiber.Ctx) error {
+func (tc transactionsController) Create(ctx *fiber.Ctx) error {
+	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
+	defer cancel()
+
+	var req dto.CreateTransactionsRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		return ctx.SendStatus(fiber.StatusUnprocessableEntity)
+	}
+
+	fails := util.Validate(req)
+	if len(fails) > 0 {
+		return ctx.Status(fiber.StatusBadRequest).
+			JSON(dto.CreateResponseErrorData("validasi gagal", fails))
+	}
+
+	err := tc.transactionsService.Create(c, req)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).
+			JSON(dto.CreateResponseError(err.Error()))
+	}
+
+	return ctx.Status(fiber.StatusCreated).
+		JSON(dto.CreateResponseSuccess("data transaksi berhasil dibuat"))
+}
+
+func (tc transactionsController) Show(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
 	id := ctx.Params("id")
-	res, err := lmt.limitService.Show(c, id)
+	res, err := tc.transactionsService.Show(c, id)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).
 			JSON(dto.CreateResponseError(err.Error()))
@@ -60,36 +86,11 @@ func (lmt *limitController) Show(ctx *fiber.Ctx) error {
 	return ctx.JSON(dto.CreateResponseSuccess(res))
 }
 
-func (lmt *limitController) Create(ctx *fiber.Ctx) error {
+func (tc transactionsController) Update(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
-	var req dto.CreateLimitRequest
-	if err := ctx.BodyParser(&req); err != nil {
-		return ctx.SendStatus(fiber.StatusUnprocessableEntity)
-	}
-
-	fails := util.Validate(req)
-	if len(fails) > 0 {
-		return ctx.Status(fiber.StatusBadRequest).
-			JSON(dto.CreateResponseErrorData("validasi gagal", fails))
-	}
-
-	err := lmt.limitService.Create(c, req)
-	if err != nil {
-		return ctx.Status(fiber.StatusInternalServerError).
-			JSON(dto.CreateResponseError(err.Error()))
-	}
-
-	return ctx.Status(fiber.StatusCreated).
-		JSON(dto.CreateResponseSuccess("data limit berhasil dibuat"))
-}
-
-func (lmt *limitController) Update(ctx *fiber.Ctx) error {
-	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
-	defer cancel()
-
-	var req dto.UpdateLimitRequest
+	var req dto.UpdateTransactionsRequest
 	if err := ctx.BodyParser(&req); err != nil {
 		return ctx.SendStatus(fiber.StatusUnprocessableEntity)
 	}
@@ -97,30 +98,31 @@ func (lmt *limitController) Update(ctx *fiber.Ctx) error {
 	req.ID = ctx.Params("id")
 
 	fails := util.Validate(req)
+
 	if len(fails) > 0 {
 		return ctx.Status(fiber.StatusBadRequest).
-			JSON(dto.CreateResponseErrorData("validasi gagal", fails))
+			JSON(dto.CreateResponseError("validasi gagal"))
 	}
 
-	err := lmt.limitService.Update(c, req)
+	err := tc.transactionsService.Update(c, req)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).
 			JSON(dto.CreateResponseError(err.Error()))
 	}
 
-	return ctx.JSON(dto.CreateResponseSuccess("data limit berhasil diperbarui"))
+	return ctx.JSON(dto.CreateResponseSuccess("data transaksi berhasil diperbarui"))
 }
 
-func (lmt *limitController) Delete(ctx *fiber.Ctx) error {
+func (tc transactionsController) Delete(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
 	id := ctx.Params("id")
-	err := lmt.limitService.Delete(c, id)
+	err := tc.transactionsService.Delete(c, id)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).
 			JSON(dto.CreateResponseError(err.Error()))
 	}
 
-	return ctx.JSON(dto.CreateResponseSuccess("data limit berhasil dihapus"))
+	return ctx.JSON(dto.CreateResponseSuccess("data transaksi berhasil dihapus"))
 }

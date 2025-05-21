@@ -31,12 +31,14 @@ type CustomerWithLimitRaw struct {
 	Salary         float64
 	KTPPhotoURL    string
 	SelfiePhotoURL string
+	LimitID        string
 	TenorMonths    sql.NullInt64
 	LimitAmount    sql.NullFloat64
 	Status         sql.NullString
 }
 
 type LimitDetail struct {
+	LimitID     string  `json:"limit_id" validate:"required,uuid4"`
 	TenorMonths int     `json:"tenor_months"`
 	LimitAmount float64 `json:"limit_amount"`
 	Status      string  `json:"status"`
@@ -56,7 +58,7 @@ type CustomerWithLimit struct {
 }
 
 type LimitRepository interface {
-	FindAll(ctx context.Context) ([]CustomerWithLimitRaw, error)
+	FindAll(ctx context.Context, limit, offset int) ([]CustomerWithLimitRaw, int64, error)
 	FindByCustomerId(ctx context.Context, id string) (CustomerWithLimit, error)
 	FindById(ctx context.Context, id string) (Limit, error)
 	Save(ctx context.Context, book *Limit) error
@@ -65,7 +67,7 @@ type LimitRepository interface {
 }
 
 type LimitService interface {
-	Index(ctx context.Context) ([]dto.CustomerLimitData, error)
+	Index(ctx context.Context, limit, offset int) ([]dto.CustomerLimitData, int64, error)
 	Show(ctx context.Context, id string) (dto.CustomerLimitData, error)
 	Create(ctx context.Context, req dto.CreateLimitRequest) error
 	Update(ctx context.Context, req dto.UpdateLimitRequest) error
