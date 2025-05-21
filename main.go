@@ -18,12 +18,15 @@ func main() {
 
 	customersRepository := repository.NewCustomers(dbConnection)
 	limitRepository := repository.NewLimit(dbConnection)
+	transactionsRepository := repository.NewTransactions(dbConnection)
 
 	customerService := service.NewCustomers(cnf, customersRepository)
 	limitService := service.NewLimit(cnf, limitRepository)
+	transactionsService := service.NewTransactions(cnf, transactionsRepository)
 
-	controller.NewCustomers(app, customerService)
+	controller.NewCustomers(app, cnf, customerService)
 	controller.NewLimit(app, limitService)
+	controller.NewTransactions(app, transactionsService)
 
 	_ = app.Listen(cnf.Server.Host + ":" + cnf.Server.Port)
 }

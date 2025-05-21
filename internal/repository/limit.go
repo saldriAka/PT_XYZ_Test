@@ -16,16 +16,29 @@ func NewLimit(db *gorm.DB) domain.LimitRepository {
 	return &limitRepository{db: db}
 }
 
-func (r *limitRepository) FindAll(ctx context.Context) ([]domain.CustomerWithLimitRaw, error) {
+func (r *limitRepository) FindAll(ctx context.Context, limit, offset int) ([]domain.CustomerWithLimitRaw, int64, error) {
 	var results []domain.CustomerWithLimitRaw
+	var total int64
+
 	err := r.db.WithContext(ctx).
 		Table("customers").
-		Select("customers.*, `limit`.tenor_months, `limit`.limit_amount, `limit`.status").
+		Where("deleted_at IS NULL").
+		Count(&total).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	err = r.db.WithContext(ctx).
+		Table("customers").
+		Select("customers.*, `limit`.tenor_months, `limit`.id as limit_id,`limit`.limit_amount, `limit`.status").
 		Joins("LEFT JOIN `limit` ON `limit`.customer_id = customers.id AND `limit`.deleted_at IS NULL").
 		Where("customers.deleted_at IS NULL").
+		Order("customers.created_at DESC").
+		Limit(limit).
+		Offset(offset).
 		Scan(&results).Error
 
-	return results, err
+	return results, total, err
 }
 
 func (r *limitRepository) FindByCustomerId(ctx context.Context, id string) (domain.CustomerWithLimit, error) {
@@ -45,7 +58,7 @@ func (r *limitRepository) FindByCustomerId(ctx context.Context, id string) (doma
 	var limits []domain.LimitDetail
 	err = r.db.WithContext(ctx).
 		Table("limit").
-		Select("tenor_months, limit_amount, status").
+		Select("id as limit_id, tenor_months, limit_amount, status").
 		Where("customer_id = ? AND deleted_at IS NULL", id).
 		Scan(&limits).Error
 	if err != nil {

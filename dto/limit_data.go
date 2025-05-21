@@ -1,6 +1,7 @@
 package dto
 
 type LimitDetail struct {
+	LimitID     string  `json:"limit_id" validate:"required,uuid4"`
 	TenorMonths int     `json:"tenor_months"`
 	LimitAmount float64 `json:"limit_amount"`
 	Status      string  `json:"status"`

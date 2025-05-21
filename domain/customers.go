@@ -22,18 +22,20 @@ type Customers struct {
 }
 
 type CustomersRepository interface {
-	FindAll(ctx context.Context) ([]Customers, error)
+	FindAll(ctx context.Context, limit, offset int) ([]Customers, int64, error)
 	FindById(ctx context.Context, id string) (Customers, error)
 	FindByIds(ctx context.Context, id []string) ([]Customers, error)
 	Save(ctx context.Context, book *Customers) error
 	Update(ctx context.Context, book *Customers) error
+	UpdateAssets(ctx context.Context, book *Customers) error
 	Delete(ctx context.Context, id string) error
 }
 
 type CustomersService interface {
-	Index(ctx context.Context) ([]dto.CustomersData, error)
+	Index(ctx context.Context, limit, offset int) ([]dto.CustomersData, int64, error)
 	Show(ctx context.Context, id string) (dto.CustomersShowData, error)
 	Create(ctx context.Context, req dto.CreateCustomersRequest) error
 	Update(ctx context.Context, req dto.UpdateCustomersRequest) error
+	UpdateAssets(ctx context.Context, id string, req dto.UpdateAssetsCustomersRequest) error
 	Delete(ctx context.Context, id string) error
 }

@@ -25,39 +25,36 @@ func NewLimit(cnf *config.Config, limitRepository domain.LimitRepository) *limit
 	}
 }
 
-func (s *limitService) Index(ctx context.Context) ([]dto.CustomerLimitData, error) {
-	result, err := s.limitRepository.FindAll(ctx)
+func (s *limitService) Index(ctx context.Context, page, limit int) ([]dto.CustomerLimitData, int64, error) {
+	offset := (page - 1) * limit
+
+	result, total, err := s.limitRepository.FindAll(ctx, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	// Map keyed by customer ID to aggregate limits
 	customerMap := make(map[string]*dto.CustomerLimitData)
 
 	for _, v := range result {
-		// Format DOB
 		formattedDOB := ""
 		if v.DateOfBirth.Valid {
 			formattedDOB = v.DateOfBirth.Time.Format("2006-01-02")
 		}
 
-		// Build limit detail if valid
-		var limit dto.LimitDetail
+		var limitDetail dto.LimitDetail
 		if v.TenorMonths.Valid && v.LimitAmount.Valid && v.Status.Valid {
-			limit = dto.LimitDetail{
+			limitDetail = dto.LimitDetail{
+				LimitID:     v.LimitID,
 				TenorMonths: int(v.TenorMonths.Int64),
 				LimitAmount: v.LimitAmount.Float64,
 				Status:      v.Status.String,
 			}
 		} else {
-			// skip limit if not valid
 			continue
 		}
 
-		// Check if customer already in map
 		cust, exists := customerMap[v.ID]
 		if !exists {
-			// Create new customer entry
 			customerMap[v.ID] = &dto.CustomerLimitData{
 				CustomersData: dto.CustomersData{
 					ID:             v.ID,
@@ -70,21 +67,19 @@ func (s *limitService) Index(ctx context.Context) ([]dto.CustomerLimitData, erro
 					KTPPhotoURL:    v.KTPPhotoURL,
 					SelfiePhotoURL: v.SelfiePhotoURL,
 				},
-				Limit: []dto.LimitDetail{limit}, // init slice with first limit
+				Limit: []dto.LimitDetail{limitDetail},
 			}
 		} else {
-			// Append limit to existing customer
-			cust.Limit = append(cust.Limit, limit)
+			cust.Limit = append(cust.Limit, limitDetail)
 		}
 	}
 
-	// Convert map to slice
 	data := make([]dto.CustomerLimitData, 0, len(customerMap))
 	for _, v := range customerMap {
 		data = append(data, *v)
 	}
 
-	return data, nil
+	return data, total, nil
 }
 
 func (s *limitService) Show(ctx context.Context, id string) (dto.CustomerLimitData, error) {
@@ -101,6 +96,7 @@ func (s *limitService) Show(ctx context.Context, id string) (dto.CustomerLimitDa
 	var limits []dto.LimitDetail
 	for _, l := range customer.Limits {
 		limits = append(limits, dto.LimitDetail{
+			LimitID:     l.LimitID,
 			TenorMonths: l.TenorMonths,
 			LimitAmount: l.LimitAmount,
 			Status:      l.Status,
