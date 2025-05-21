@@ -17,10 +17,13 @@ func main() {
 	app := fiber.New()
 
 	customersRepository := repository.NewCustomers(dbConnection)
+	limitRepository := repository.NewLimit(dbConnection)
 
 	customerService := service.NewCustomers(cnf, customersRepository)
+	limitService := service.NewLimit(cnf, limitRepository)
 
 	controller.NewCustomers(app, customerService)
+	controller.NewLimit(app, limitService)
 
 	_ = app.Listen(cnf.Server.Host + ":" + cnf.Server.Port)
 }
