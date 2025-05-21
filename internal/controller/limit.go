@@ -15,12 +15,12 @@ type limitController struct {
 	limitService domain.LimitService
 }
 
-func NewLimit(app *fiber.App, limitService domain.LimitService) {
+func NewLimit(app *fiber.App, limitService domain.LimitService, authMid fiber.Handler) {
 	lmt := &limitController{
 		limitService: limitService,
 	}
 
-	limit := app.Group("/limit")
+	limit := app.Group("/limit", authMid)
 	limit.Get("/", lmt.Index)
 	limit.Get("/:id", lmt.Show)
 	limit.Post("/", lmt.Create)

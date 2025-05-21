@@ -17,13 +17,13 @@ type customersController struct {
 	customersService domain.CustomersService
 }
 
-func NewCustomers(app *fiber.App, conf *config.Config, customersService domain.CustomersService) {
+func NewCustomers(app *fiber.App, conf *config.Config, customersService domain.CustomersService, authMid fiber.Handler) {
 	ca := &customersController{
 		conf:             conf,
 		customersService: customersService,
 	}
 
-	customers := app.Group("/customers")
+	customers := app.Group("/customers", authMid)
 	customers.Get("/", ca.Index)
 	customers.Post("/", ca.Create)
 	customers.Get("/:id", ca.Show)
