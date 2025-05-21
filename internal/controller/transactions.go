@@ -15,12 +15,12 @@ type transactionsController struct {
 	transactionsService domain.TransactionsService
 }
 
-func NewTransactions(app *fiber.App, transactionsService domain.TransactionsService) {
+func NewTransactions(app *fiber.App, transactionsService domain.TransactionsService, authMid fiber.Handler) {
 	tc := &transactionsController{
 		transactionsService: transactionsService,
 	}
 
-	transactions := app.Group("/transactions")
+	transactions := app.Group("/transactions", authMid)
 	transactions.Get("/", tc.Index)
 	transactions.Post("/", tc.Create)
 	transactions.Get("/:id", tc.Show)
