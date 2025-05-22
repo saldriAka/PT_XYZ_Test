@@ -13,6 +13,19 @@ type TransactionsData struct {
 	TenorMonths    int         `json:"tenor_months"`
 }
 
+type Transactions struct {
+	ID             string  `json:"id"`
+	CustomerID     string  `json:"customer_id"`
+	ContractNumber string  `json:"contract_number"`
+	Channel        string  `json:"channel"`
+	OTRAmount      float64 `json:"otr_amount"`
+	AdminFee       float64 `json:"admin_fee"`
+	Installment    float64 `json:"installment"`
+	Interest       float64 `json:"interest"`
+	AssetName      string  `json:"asset_name"`
+	TenorMonths    int     `json:"tenor_months"`
+}
+
 type CustomerDTO struct {
 	ID             string  `json:"id"`
 	NIK            string  `json:"nik"`
@@ -50,4 +63,15 @@ type UpdateTransactionsRequest struct {
 	Interest    float64 `json:"interest"`
 	AssetName   string  `json:"asset_name" validate:"required"`
 	TenorMonths int     `json:"tenor_months" validate:"required"`
+}
+
+type Product struct {
+	ContractNumber string  `json:"contract_number"`
+	Channel        string  `json:"channel"`
+	OTRAmount      int     `json:"otr_amount"`
+	AdminFee       int     `json:"admin_fee"`
+	Installment    int     `json:"installment"`
+	Interest       float64 `json:"interest"`
+	AssetName      string  `json:"asset_name"`
+	TenorMonths    int     `json:"tenor_months"`
 }

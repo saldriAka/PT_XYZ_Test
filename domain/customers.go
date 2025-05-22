@@ -8,6 +8,8 @@ import (
 
 type Customers struct {
 	ID             string       `db:"id"`
+	Email          string       `db:"email"`
+	Password       string       `db:"password"`
 	NIK            string       `db:"nik"`
 	FullName       string       `db:"full_name"`
 	LegalName      string       `db:"legal_name"`

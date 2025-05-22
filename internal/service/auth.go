@@ -49,3 +49,19 @@ func (a authService) Login(ctx context.Context, req dto.AuthRequest) (dto.AuthRe
 
 	return dto.AuthResponse{Token: tokenStr}, nil
 }
+
+func (a authService) LoginWeb(ctx context.Context, req dto.AuthRequest) (dto.AuthWebResponse, error) {
+	user, err := a.userRepository.FindByCustomerEmail(ctx, req.Email)
+	if err != nil {
+		return dto.AuthWebResponse{}, errors.New("email tidak ditemukan")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return dto.AuthWebResponse{}, errors.New("password salah")
+	}
+
+	return dto.AuthWebResponse{
+		ID:    user.ID,
+		Email: user.Email,
+	}, nil
+}

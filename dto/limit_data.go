@@ -26,3 +26,11 @@ type UpdateLimitRequest struct {
 	LimitAmount float64 `json:"limit_amount" validate:"required,gt=0"`
 	Status      string  `json:"status" validate:"required,oneof=available booked"`
 }
+
+type LimitResponseItem struct {
+	ID          string
+	CustomerId  string
+	TenorMonths int
+	LimitAmount float64
+	Status      string
+}

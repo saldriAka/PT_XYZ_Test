@@ -1,0 +1,49 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+
+    {{ range .Products }}
+      <div class="col-md-3 mb-4 d-flex">
+        <form action="/transaction" method="POST" class="w-100">
+          <div class="card h-100 text-center">
+            <div class="card-header bg-primary text-white">
+              <h4 class="my-0">{{ .AssetName }}</h4>
+            </div>
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">Rp {{ .OTRAmount }}</h5>
+              <ul class="list-unstyled text-start flex-grow-1">
+                <li>
+                  <strong>Tenor:</strong>
+                  <select name="tenor_months" class="form-select mt-1">
+                    <option value="1">1 bulan</option>
+                    <option value="2">2 bulan</option>
+                    <option value="3">3 bulan</option>
+                    <option value="6">6 bulan</option>
+                  </select>
+                </li>
+                <li><strong>Installment:</strong> Rp {{ .Installment }}</li>
+                <li><strong>Interest:</strong> {{ .Interest }}%</li>
+                <li><strong>Admin Fee:</strong> Rp {{ .AdminFee }}</li>
+                <li><strong>Channel:</strong> {{ .Channel }}</li>
+              </ul>
+
+              <!-- Hidden fields -->
+              <input type="hidden" name="contract_number" value="{{ .ContractNumber }}">
+              <input type="hidden" name="channel" value="{{ .Channel }}">
+              <input type="hidden" name="otr_amount" value="{{ .OTRAmount }}">
+              <input type="hidden" name="admin_fee" value="{{ .AdminFee }}">
+              <input type="hidden" name="installment" value="{{ .Installment }}">
+              <input type="hidden" name="interest" value="{{ .Interest }}">
+              <input type="hidden" name="asset_name" value="{{ .AssetName }}">
+
+              <button type="submit" class="btn btn-success btn-block mt-3">Ambil Kredit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    {{ end }}
+
+      
+
+  </div>
+</div>
+

@@ -12,4 +12,5 @@ type User struct {
 
 type UserRepository interface {
 	FindByEmail(ctx context.Context, email string) (User, error)
+	FindByCustomerEmail(ctx context.Context, email string) (Customers, error)
 }

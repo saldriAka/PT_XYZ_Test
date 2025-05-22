@@ -38,5 +38,8 @@ func Get() *Config {
 		Storage: Storage{
 			BasePath: os.Getenv("STORAGE_PATH"),
 		},
+		ServiceMode: ServiceMode{
+			ServiceMode: os.Getenv("SERVICE_MODE"),
+		},
 	}
 }

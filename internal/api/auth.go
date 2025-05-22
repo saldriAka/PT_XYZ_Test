@@ -1,4 +1,4 @@
-package controller
+package api
 
 import (
 	"context"
@@ -19,7 +19,7 @@ func NewAuth(app *fiber.App, authService domain.AuthService) {
 		authService: authService,
 	}
 
-	app.Post("/auth", aa.Login)
+	app.Post("/jwt/auth", aa.Login)
 }
 
 func (aa authApi) Login(ctx *fiber.Ctx) error {

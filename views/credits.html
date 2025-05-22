@@ -1,0 +1,73 @@
+<div class="container mt-5">
+
+  <!-- Section: Limit Kredit -->
+  <h2 class="mb-4">Daftar Limit Kredit</h2>
+  <div class="table-responsive mb-5">
+    <table class="table table-bordered table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>No</th>
+          <th>Tenor (bulan)</th>
+          <th>Limit</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Limits}}
+        <tr>
+          <td>{{.No}}</td>
+          <td>{{.TenorMonths}}</td>
+          <td>Rp {{.LimitAmount}}</td>
+          <td>
+            {{if eq .Status "booked"}}
+              <span class="badge badge-danger">booked</span>
+            {{else if eq .Status "available"}}
+              <span class="badge badge-success">available</span>
+            {{else}}
+              <span class="badge badge-primary">{{.Status}}</span>
+            {{end}}
+          </td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <!-- Section: Transaksi -->
+  <h2 class="mb-4">Riwayat Transaksi</h2>
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead class="table-primary">
+        <tr>
+          <th>Contract Number</th>
+          <th>Asset Name</th>
+          <th>Channel</th>
+          <th>OTR</th>
+          <th>Admin Fee</th>
+          <th>Installment</th>
+          <th>Interest</th>
+          <th>Tenor</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Transaction}}
+        <tr>
+          <td>{{.ContractNumber}}</td>
+          <td>{{.AssetName}}</td>
+          <td>{{.Channel}}</td>
+          <td>{{.OTRAmount }}</td>
+          <td>{{.AdminFee }}</td>
+          <td>{{.Installment }}</td>
+          <td>{{.Interest }}</td>
+          <td>{{.TenorMonths}} bulan</td>
+        </tr>
+        {{end}}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>

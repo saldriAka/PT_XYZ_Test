@@ -1,10 +1,11 @@
 package config
 
 type Config struct {
-	Server   Server
-	Database Database
-	Jwt      Jwt
-	Storage  Storage
+	Server      Server
+	Database    Database
+	Jwt         Jwt
+	Storage     Storage
+	ServiceMode ServiceMode
 }
 
 type Server struct {
@@ -29,4 +30,8 @@ type Jwt struct {
 
 type Storage struct {
 	BasePath string
+}
+
+type ServiceMode struct {
+	ServiceMode string
 }

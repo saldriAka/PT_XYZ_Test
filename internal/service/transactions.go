@@ -65,6 +65,31 @@ func (s transactionsService) Index(ctx context.Context, page, limit int) ([]dto.
 	return data, total, nil
 }
 
+func (s transactionsService) CustomerShow(ctx context.Context, id string) ([]dto.Transactions, error) {
+	result, err := s.transactionsRepository.FindByCustomerId(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	var data []dto.Transactions
+	for _, v := range result {
+		data = append(data, dto.Transactions{
+			ID:             v.ID,
+			CustomerID:     v.CustomerID,
+			ContractNumber: v.ContractNumber,
+			Channel:        v.Channel,
+			OTRAmount:      v.OTRAmount,
+			AdminFee:       v.AdminFee,
+			Installment:    v.Installment,
+			Interest:       v.Interest,
+			AssetName:      v.AssetName,
+			TenorMonths:    v.TenorMonths,
+		})
+	}
+
+	return data, nil
+}
+
 func (s transactionsService) Show(ctx context.Context, id string) (dto.TransactionsData, error) {
 	transaction, err := s.transactionsRepository.FindById(ctx, id)
 	if err != nil {

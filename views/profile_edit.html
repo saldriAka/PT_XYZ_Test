@@ -1,0 +1,57 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Profil Pelanggan</h2>
+
+  <form method="POST" action="/profile" enctype="multipart/form-data">
+    <input type="hidden" name="id" value="{{ .Customer.ID }}"/>
+
+    <div class="mb-3">
+      <label class="form-label">NIK</label>
+      <input type="text" class="form-control" name="nik" value="{{ .Customer.NIK }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" class="form-control" name="full_name" value="{{ .Customer.FullName }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Legal Name</label>
+      <input type="text" class="form-control" name="legal_name" value="{{ .Customer.LegalName }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Place of Birth</label>
+      <input type="text" class="form-control" name="place_of_birth" value="{{ .Customer.PlaceOfBirth }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Date of Birth</label>
+      <input type="text" class="form-control" name="date_of_birth" value="{{ .Customer.DateOfBirth }}">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Salary</label>
+      <input type="text" class="form-control" name="salary" value="{{ .Customer.Salary }}">
+    </div>
+
+    <!-- KTP Photo Upload -->
+    <div class="mb-3">
+      <label for="ktpPhoto" class="form-label">KTP Photo</label>
+      <input class="form-control" type="file" id="ktpPhoto" name="ktp_photo" accept="image/*" onchange="previewImage(event, 'ktpPreview')">
+      <div class="mt-2">
+        <img src="{{ .Customer.KTPPhotoURL }}" alt="KTP Photo" id="ktpPreview" class="img-thumbnail" width="150">
+      </div>
+    </div>
+
+    <!-- Selfie Photo Upload -->
+    <div class="mb-3">
+      <label for="selfiePhoto" class="form-label">Selfie Photo</label>
+      <input class="form-control" type="file" id="selfiePhoto" name="selfie_photo" accept="image/*" onchange="previewImage(event, 'selfiePreview')">
+      <div class="mt-2">
+        <img src="{{ .Customer.SelfiePhotoURL }}" alt="Selfie Photo" id="selfiePreview" class="img-thumbnail" width="150">
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>

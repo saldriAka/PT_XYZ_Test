@@ -28,3 +28,15 @@ func (u userRepository) FindByEmail(ctx context.Context, email string) (domain.U
 	}
 	return usr, err
 }
+
+func (u userRepository) FindByCustomerEmail(ctx context.Context, email string) (domain.Customers, error) {
+	var usr domain.Customers
+	err := u.db.WithContext(ctx).
+		Where("email = ? AND deleted_at IS NULL", email).
+		First(&usr).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return domain.Customers{}, nil
+	}
+	return usr, err
+}
