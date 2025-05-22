@@ -38,7 +38,7 @@ type Customer struct {
 type TransactionsRepository interface {
 	FindAll(ctx context.Context, limit, offset int) ([]Transactions, int64, error)
 	FindById(ctx context.Context, id string) (Transactions, error)
-	FindByIds(ctx context.Context, id []string) ([]Transactions, error)
+	FindByCustomerId(ctx context.Context, id string) ([]Transactions, error)
 	Save(ctx context.Context, book *Transactions) error
 	Update(ctx context.Context, book *Transactions) error
 	Delete(ctx context.Context, id string) error
@@ -47,6 +47,7 @@ type TransactionsRepository interface {
 type TransactionsService interface {
 	Index(ctx context.Context, limit, offset int) ([]dto.TransactionsData, int64, error)
 	Show(ctx context.Context, id string) (dto.TransactionsData, error)
+	CustomerShow(ctx context.Context, id string) ([]dto.Transactions, error)
 	Create(ctx context.Context, req dto.CreateTransactionsRequest) error
 	Update(ctx context.Context, req dto.UpdateTransactionsRequest) error
 	Delete(ctx context.Context, id string) error

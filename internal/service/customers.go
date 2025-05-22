@@ -132,15 +132,16 @@ func (s customersService) Update(ctx context.Context, req dto.UpdateCustomersReq
 	if err != nil {
 		return fmt.Errorf("invalid date_of_birth: %w", err)
 	}
+
 	customer.FullName = req.FullName
+	customer.NIK = req.NIK
 	customer.LegalName = req.LegalName
 	customer.PlaceOfBirth = req.PlaceOfBirth
 	customer.DateOfBirth = sql.NullTime{Valid: true, Time: dob}
 	customer.Salary = req.Salary
-	customer.UpdatedAt = sql.NullTime{
-		Valid: true,
-		Time:  time.Now(),
-	}
+	customer.KTPPhotoURL = req.KTPPhotoURL
+	customer.SelfiePhotoURL = req.SelfiePhotoURL
+	customer.UpdatedAt = sql.NullTime{Valid: true, Time: time.Now()}
 
 	return s.customersRepository.Update(ctx, &customer)
 }

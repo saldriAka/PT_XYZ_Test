@@ -1,0 +1,82 @@
+[
+  {
+    "contract_number": "TRX20250001",
+    "channel": "Online",
+    "otr_amount": 2000000,
+    "admin_fee": 20000,
+    "installment": 2020000,
+    "interest": 1,
+    "asset_name": "Sepeda Listrik Polygon",
+    "tenor_months": 6
+  },
+  {
+    "contract_number": "TRX20250002",
+    "channel": "E-commerce",
+    "otr_amount": 1500000,
+    "admin_fee": 30000,
+    "installment": 765000,
+    "interest": 3,
+    "asset_name": "Smartphone Redmi A1",
+    "tenor_months": 2
+  },
+  {
+    "contract_number": "TRX20250003",
+    "channel": "Dealer",
+    "otr_amount": 1200000,
+    "admin_fee": 20000,
+    "installment": 420000,
+    "interest": 2.5,
+    "asset_name": "Mesin Cuci Mini",
+    "tenor_months": 3
+  },
+  {
+    "contract_number": "TRX20250004",
+    "channel": "E-commerce",
+    "otr_amount": 850000,
+    "admin_fee": 24000,
+    "installment": 437000,
+    "interest": 2,
+    "asset_name": "Kompor Induksi Mini",
+    "tenor_months": 2
+  },
+  {
+    "contract_number": "TRX20250005",
+    "channel": "Online",
+    "otr_amount": 100000,
+    "admin_fee": 1000,
+    "installment": 102000,
+    "interest": 1,
+    "asset_name": "Pulpen Gel Premium",
+    "tenor_months": 1
+  },
+  {
+    "contract_number": "TRX20250006",
+    "channel": "Online",
+    "otr_amount": 200000,
+    "admin_fee": 5000,
+    "installment": 102500,
+    "interest": 2,
+    "asset_name": "Kipas Mini USB",
+    "tenor_months": 2
+  },
+  {
+    "contract_number": "TRX20250007",
+    "channel": "Dealer",
+    "otr_amount": 500000,
+    "admin_fee": 16000,
+    "installment": 172000,
+    "interest": 2,
+    "asset_name": "Headset Wireless",
+    "tenor_months": 3
+  },
+  {
+    "contract_number": "TRX20250008",
+    "channel": "E-commerce",
+    "otr_amount": 700000,
+    "admin_fee": 20000,
+    "installment": 120000,
+    "interest": 2.5,
+    "asset_name": "Speaker Bluetooth",
+    "tenor_months": 6
+  }
+]

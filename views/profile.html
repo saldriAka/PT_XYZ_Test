@@ -1,0 +1,43 @@
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Profile</h1>
+  <p class="lead">Ringkasan informasi pelanggan, mulai dari identitas diri hingga foto, ditampilkan secara jelas dan mudah dipahami.</p>
+</div>
+<table class="table">
+  <tbody>
+    <tr>
+      <td>NIK</td>
+      <td>{{ .Customer.NIK }}</td>
+    </tr>
+    <tr>
+      <td>Full Name</td>
+      <td>{{ .Customer.FullName }}</td>
+    </tr>
+    <tr>
+      <td>Legal Name</td>
+      <td>{{ .Customer.LegalName }}</td>
+    </tr>
+    <tr>
+      <td>Place of Birth</td>
+      <td>{{ .Customer.PlaceOfBirth }}</td>
+    </tr>
+    <tr>
+      <td>Date of Birth</td>
+      <td>{{ .Customer.DateOfBirth }}</td>
+    </tr>
+    <tr>
+      <td>Salary</td>
+      <td>Rp. {{ .Customer.Salary }}</td>
+    </tr>
+    <tr>
+      <td>KTP Photo</td>
+      <td><img src="{{ .Customer.KTPPhotoURL }}" alt="KTP Photo" width="100"></td>
+    </tr>
+    <tr>
+      <td>Selfie Photo</td>
+      <td><img src="{{ .Customer.SelfiePhotoURL }}" alt="Selfie Photo" width="100"></td>
+    </tr>
+  </tbody>
+</table>
+<div class="text-center mt-4">
+  <a href="/profile/{{ .Customer.ID }}" class="btn btn-primary">Edit Profile</a>
+</div>

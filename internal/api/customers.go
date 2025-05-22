@@ -1,4 +1,4 @@
-package controller
+package api
 
 import (
 	"context"
@@ -12,28 +12,28 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type customersController struct {
+type customersApi struct {
 	conf             *config.Config
 	customersService domain.CustomersService
 }
 
 func NewCustomers(app *fiber.App, conf *config.Config, customersService domain.CustomersService, authMid fiber.Handler) {
-	ca := &customersController{
+	ca := &customersApi{
 		conf:             conf,
 		customersService: customersService,
 	}
 
-	customers := app.Group("/customers", authMid)
-	customers.Get("/", ca.Index)
-	customers.Post("/", ca.Create)
-	customers.Get("/:id", ca.Show)
+	customers := app.Group("/api", authMid)
+	customers.Get("/customers", ca.Index)
+	customers.Post("/customers", ca.Create)
+	customers.Get("/customers/:id", ca.Show)
 	customers.Put("/:id", ca.Update)
-	customers.Put("/assets/:id", ca.UpdateAssets)
-	customers.Delete("/:id", ca.Delete)
-	app.Static("/assets", conf.Storage.BasePath)
+	customers.Put("/customers/assets/:id", ca.UpdateAssets)
+	customers.Delete("/customers/:id", ca.Delete)
+	app.Static("/media", conf.Storage.BasePath)
 }
 
-func (ca customersController) Index(ctx *fiber.Ctx) error {
+func (ca customersApi) Index(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -51,7 +51,7 @@ func (ca customersController) Index(ctx *fiber.Ctx) error {
 	return dto.PaginateAndRespond(ctx, res, int(total))
 }
 
-func (ca customersController) Create(ctx *fiber.Ctx) error {
+func (ca customersApi) Create(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -76,7 +76,7 @@ func (ca customersController) Create(ctx *fiber.Ctx) error {
 		JSON(dto.CreateResponseSuccess("data customer berhasil dibuat"))
 }
 
-func (ca customersController) Show(ctx *fiber.Ctx) error {
+func (ca customersApi) Show(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -90,7 +90,7 @@ func (ca customersController) Show(ctx *fiber.Ctx) error {
 	return ctx.JSON(dto.CreateResponseSuccess(res))
 }
 
-func (ca customersController) Update(ctx *fiber.Ctx) error {
+func (ca customersApi) Update(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -116,7 +116,7 @@ func (ca customersController) Update(ctx *fiber.Ctx) error {
 	return ctx.JSON(dto.CreateResponseSuccess("data customer berhasil diperbarui"))
 }
 
-func (ca customersController) Delete(ctx *fiber.Ctx) error {
+func (ca customersApi) Delete(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 
@@ -130,7 +130,7 @@ func (ca customersController) Delete(ctx *fiber.Ctx) error {
 	return ctx.JSON(dto.CreateResponseSuccess("data customer berhasil dihapus"))
 }
 
-func (ca customersController) UpdateAssets(ctx *fiber.Ctx) error {
+func (ca customersApi) UpdateAssets(ctx *fiber.Ctx) error {
 	c, cancel := context.WithTimeout(ctx.Context(), 10*time.Second)
 	defer cancel()
 

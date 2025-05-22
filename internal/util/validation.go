@@ -3,7 +3,6 @@ package util
 import (
 	"errors"
 	"fmt"
-	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -11,6 +10,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/google/uuid"
 )
 
@@ -109,7 +109,8 @@ func ProcessAndSaveImageFile(ctx *fiber.Ctx, opts ImageSaveOptions) (string, err
 		return "", fmt.Errorf("gagal menyimpan file: %v", err)
 	}
 
-	publicURL := path.Join(opts.PublicURL, filename)
+	publicURL := strings.TrimRight(opts.PublicURL, "/") + "/" + filename
+
 	return publicURL, nil
 }
 
@@ -119,5 +120,19 @@ func isValidImageExt(ext string) bool {
 		return true
 	default:
 		return false
+	}
+}
+
+func AuthRequired(store *session.Store) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		sess, err := store.Get(ctx)
+		if err != nil {
+			return ctx.Redirect("/login")
+		}
+		userID := sess.Get("user_id")
+		if userID == nil || userID == "" {
+			return ctx.Redirect("/login")
+		}
+		return ctx.Next()
 	}
 }

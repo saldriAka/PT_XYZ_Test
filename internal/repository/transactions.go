@@ -54,13 +54,13 @@ func (r *transactionsRepository) FindById(ctx context.Context, id string) (domai
 	return transaction, err
 }
 
-func (r *transactionsRepository) FindByIds(ctx context.Context, ids []string) ([]domain.Transactions, error) {
+func (r *transactionsRepository) FindByCustomerId(ctx context.Context, id string) ([]domain.Transactions, error) {
 	var transactions []domain.Transactions
-	if len(ids) == 0 {
+	if len(id) == 0 {
 		return transactions, nil
 	}
 	err := r.db.WithContext(ctx).
-		Where("id IN ?", ids).
+		Where("customer_id = ?", id).
 		Where("deleted_at IS NULL").
 		Find(&transactions).Error
 	return transactions, err
