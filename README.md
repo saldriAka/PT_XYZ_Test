@@ -1,7 +1,6 @@
 # 🚀 PT_XYZ_Test – Studi Kasus Golang Developer (KREDIT PLUS)
 
 Selamat datang di proyek studi kasus PT XYZ!  
-Aplikasi ini merupakan implementasi backend service berbasis **Golang** yang dibangun dengan pendekatan **GitFlow** serta mengikuti praktik pengembangan modern.
 
 ---
 
@@ -11,7 +10,7 @@ Aplikasi ini merupakan implementasi backend service berbasis **Golang** yang dib
 - ✅ Menggunakan **Fiber (Go Web Framework)** untuk HTTP handling
 - ✅ Koneksi ke database **MySQL** via **GORM**
 - ✅ Dukungan upload file dengan validasi
-- ✅ Dockerized untuk kemudahan deploy dan environment parity
+- ✅ Dockerized
 - ✅ Mengadopsi **GitFlow Workflow** (`main`, `develop`, `feature/*`, `hotfix/*`)
 
 ---
@@ -32,9 +31,9 @@ Semua file pendukung disimpan di dalam folder `extras/`:
 
 | Jenis                     | File / Lokasi                    |
 |--------------------------|----------------------------------|
-| 💾 SQL Dump              | `extras/db.sql`                  |
-| 🏗️ Gambar Arsitektur App | `extras/architecture.png`        |
-| 🧩 Entity Relationship    | `extras/er-diagram.png`          |
+| 💾 SQL Dump              | `extras/test_pt_xyz.sql`                  |
+| 🏗️ Gambar Arsitektur App | `extras/Arsitektur aplikasi.png`        |
+| 🧩 Entity Relationship    | `extras/Struktur-Database.png`          |
 
 ---
 
@@ -44,7 +43,7 @@ Semua file pendukung disimpan di dalam folder `extras/`:
 
 ```bash
 # 1. Clone repositori
-git clone https://github.com/namamu/PT_XYZ_Test.git
+git clone https://github.com/saldriAka/PT_XYZ_Test.git
 cd PT_XYZ_Test
 
 # 2. Jalankan Docker
