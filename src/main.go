@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"saldri/test_pt_xyz/dto"
 	"saldri/test_pt_xyz/internal/api"
 	"saldri/test_pt_xyz/internal/config"
@@ -58,5 +59,6 @@ func main() {
 
 	web.NewWeb(app, customerService, limitService, transactionsService, authService, cnf, store)
 
-	_ = app.Listen(cnf.Server.Host + ":" + cnf.Server.Port)
+	fmt.Println("Listening on", cnf.Server.Host+":"+cnf.Server.Port)
+	_ = app.Listen(":" + cnf.Server.Port)
 }
