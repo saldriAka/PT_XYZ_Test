@@ -1,3 +1,7 @@
 
 .docker/db.sql/
 .docker/mysql_data/
+.src/storage/*
+
+.env
+.src/.env
